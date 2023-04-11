@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DejsiPlaner</string>
+    <string name="username">Korisničko ime</string>
+    <string name="password">Lozinka</string>
+    <string name="login">Prijavi se</string>
+    <string name="logout">Odjava</string>
+    <string name="calendar">Kalendar</string>
+    <string name="daily_plan">Dnevni plan</string>
+    <string name="profile">Profil</string>
+    <string name="low">Mali</string>
+    <string name="mid">Srednji</string>
+    <string name="high">Visoki</string>
+    <string name="pastObligations">Prikaži prošle obaveze</string>
+    <string name="title">Naslov</string>
+    <string name="time">Vreme</string>
+    <string name="description">Opis</string>
+    <string name="search">Pretraži</string>
+    <string name="create">Kreiraj</string>
+    <string name="edit">Izmeni</string>
+    <string name="change_password">Promeni lozinku</string>
+    <string name="save">Sačuvaj</string>
+    <string name="delete">Obriši</string>
+    <string name="cancel">Otkaži</string>
+</resources>
