@@ -1,5 +1,8 @@
 package com.example.planner.database;
 
+import static com.example.planner.models.User.UserEntry.*;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -24,11 +27,18 @@ public class UserDBHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_USERS_TABLE = "CREATE TABLE " +
                 UserEntry.TABLE_NAME + " (" +
                 UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                UserEntry.COLUMN_EMAIL + " TEXT NOT NULL, " +
+                COLUMN_EMAIL + " TEXT NOT NULL, " +
                 UserEntry.COLUMN_USERNAME + " TEXT NOT NULL, " +
                 UserEntry.COLUMN_PASSWORD + " TEXT NOT NULL, " +
                 UserEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ");";
         db.execSQL(SQL_CREATE_USERS_TABLE);
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EMAIL, "admin@gmail.com");
+        values.put(COLUMN_USERNAME, "admin");
+        values.put(COLUMN_PASSWORD, "Admin123");
+        long id = db.insert(TABLE_NAME, null, values);
+//        db.close();
     }
 
     @Override

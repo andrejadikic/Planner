@@ -22,43 +22,10 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             >
-            <RadioGroup
-                android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintVertical_bias="0">
-
-                <RadioButton
-                    android:id="@+id/low"
-                    style="@style/RadioButton"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/low"
-                    android:background="@color/low_priority"/>
-
-                <RadioButton
-                    android:id="@+id/mid"
-                    style="@style/RadioButton"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/mid"
-                    android:background="@color/mid_priority"/>
-
-                <RadioButton
-                    android:id="@+id/high"
-                    style="@style/RadioButton"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/high"
-                    android:background="@color/high_priority"/>
-            </RadioGroup>
 
             <TextView
                 android:id="@+id/start"
-                style="@style/InputText"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                style="@style/ShowText"
                 android:text="@string/startTime"
                 android:textSize="30sp"
                 app:layout_constraintEnd_toStartOf="@+id/end"
@@ -67,29 +34,28 @@
 
             <TextView
                 android:id="@+id/end"
-                style="@style/InputText"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                style="@style/ShowText"
                 android:text="@string/endTime"
                 android:textSize="30sp"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/start"
+                app:flow_horizontalBias="0"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-            <EditText
+            <TextView
                 android:id="@+id/title"
-                style="@style/InputText"
-                android:hint="@string/title"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:text="@string/title"
+                style="@style/ShowText"
+                android:textSize="38sp"
+                android:layout_marginTop="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start" />
 
-            <EditText
+            <TextView
                 android:id="@+id/details"
                 style="@style/InputText"
-                android:hint="@string/description"
-                android:inputType="textMultiLine"
-                android:lines="10"
+                android:text="@string/description"
+                android:lines="20"
+                android:textSize="22sp"
                 android:gravity="top"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

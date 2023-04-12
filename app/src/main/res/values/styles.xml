@@ -1,2 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <style name="InputText" parent="Theme.Planner">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/border</item>
+    </style>
+    <style name="RadioButton" parent="Theme.Planner">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="OkButton" parent="Theme.Planner">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:backgroundTint">@color/pink_200</item>
+        <item name="android:textAlignment">center</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
+
+    <style name="BadButton" parent="Theme.Planner">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:backgroundTint">@color/pink_300</item>
+        <item name="android:textAlignment">center</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
+
+    <style name="ShowText" parent="Theme.Planner">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textAlignment">viewStart</item>
+    </style>
+
+
+
+</resources>

@@ -24,6 +24,7 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
                 PlanEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PlanEntry.COLUMN_USER + " INTEGER NOT NULL, " +
                 PlanEntry.COLUMN_NAME + " TEXT NOT NULL, " +
+                PlanEntry.COLUMN_PRIORITY + " TEXT NOT NULL, " +
                 PlanEntry.COLUMN_STARTDATE + " TEXT NOT NULL, " +
                 PlanEntry.COLUMN_ENDDATE + " TEXT NOT NULL," +
                 PlanEntry.COLUMN_DETAILS + " TEXT NOT NULL, " +

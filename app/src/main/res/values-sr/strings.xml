@@ -14,6 +14,8 @@
     <string name="pastObligations">Prikaži prošle obaveze</string>
     <string name="title">Naslov</string>
     <string name="time">Vreme</string>
+    <string name="startTime">Pocetak obaveze</string>
+    <string name="endTime">Kraj obaveze</string>
     <string name="description">Opis</string>
     <string name="search">Pretraži</string>
     <string name="create">Kreiraj</string>
