@@ -98,7 +98,7 @@
             <Button
                 android:id="@+id/createBtn"
                 style="@style/OkButton"
-                android:text="@string/create"
+                android:text="@string/save"
                 app:layout_constraintEnd_toStartOf="@+id/cancelBtn"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
