@@ -48,7 +48,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         dbManager = new DBManager(getContext());
         dbManager.open();
         init(view);
@@ -87,6 +87,7 @@ public class LoginFragment extends Fragment {
             sp.edit().putString(StaticValues.USERNAME,username).apply();
             sp.edit().putString(StaticValues.PASSWORD,password).apply();
             sp.edit().putLong(StaticValues.ID,user.getId()).apply();
+            userViewModel.storeUserInput(user);
             FragmentTransaction transaction = createTransactionWithAnimation();
             transaction.replace(R.id.mainFragment, new MainFragment());
             transaction.commit();

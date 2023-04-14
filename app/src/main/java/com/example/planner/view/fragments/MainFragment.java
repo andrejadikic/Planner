@@ -47,7 +47,7 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         dbManager = new DBManager(getContext());
         dbManager.open();
-        plansRecyclerViewModel = new ViewModelProvider(this).get(PlansRecyclerViewModel.class);
+        plansRecyclerViewModel = new ViewModelProvider(requireActivity()).get(PlansRecyclerViewModel.class);
         init(view);
     }
 
