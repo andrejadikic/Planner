@@ -60,7 +60,7 @@ public class DBManager {
     }
 
     public User loginUser(String username, String password) {
-        Cursor resultSet = db.rawQuery("Select * from " + UserEntry.TABLE_NAME,null);
+        Cursor resultSet = db.rawQuery("Select * from " + UserEntry.TABLE_NAME + " where " + UserEntry.COLUMN_USERNAME + " = '" + username + "'",null);
         resultSet.moveToFirst();
         if (resultSet.getCount() > 0 && password.equals(resultSet.getString(3))) {
             return new User(resultSet.getLong(0),resultSet.getString(1),username,password);

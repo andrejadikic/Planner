@@ -32,12 +32,15 @@ public class PlansRecyclerViewModel extends ViewModel {
 
     public PlansRecyclerViewModel() {
         plansLiveData = new MutableLiveData<>();
+        plansForDay = new HashMap<>();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void fetch(DBManager dbManager){
         plansForDay = dbManager.findPlansForUser();
-        Map<LocalDate, List<Plan>> listToSubmit = new HashMap<LocalDate, List<Plan>>(plansForDay);
+        Map<LocalDate, List<Plan>> listToSubmit = new HashMap<>(plansForDay);
         plansLiveData.setValue(listToSubmit);
 
     }
+
+
 }

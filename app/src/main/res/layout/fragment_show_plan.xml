@@ -30,7 +30,7 @@
                 android:textSize="30sp"
                 app:layout_constraintEnd_toStartOf="@+id/end"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/end"
@@ -38,8 +38,8 @@
                 android:text="@string/endTime"
                 android:textSize="30sp"
                 app:layout_constraintStart_toEndOf="@+id/start"
-                app:flow_horizontalBias="0"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:flow_horizontalBias="0"/>
 
             <TextView
                 android:id="@+id/title"
