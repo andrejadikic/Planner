@@ -49,10 +49,10 @@ public class PlansRecyclerViewModel extends AndroidViewModel {
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void fetch(){
+        plansForDay=dbManager.findPlansForUser();
         for(int i=-20;i<=300;i++){
             plansForDay.putIfAbsent(LocalDate.now().plusDays(i), new ArrayList<>());
         }
-        Map<LocalDate, List<Plan>> plans=dbManager.findPlansForUser();
         sort();
         updateLiveList();
     }

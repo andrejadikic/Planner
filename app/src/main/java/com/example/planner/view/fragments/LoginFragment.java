@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.planner.R;
+import com.example.planner.app.MainActivity;
 import com.example.planner.app.StaticValues;
 import com.example.planner.database.DBManager;
 import com.example.planner.models.User;
@@ -83,7 +84,7 @@ public class LoginFragment extends Fragment {
                 Toast.makeText(context, "Wrong password or username", Toast.LENGTH_LONG).show();
                 return;
             }
-            sp.edit().putString(StaticValues.EMAIL,email).apply();
+            sp.edit().putString(StaticValues.EMAIL,user.getEmail()).apply();
             sp.edit().putBoolean(StaticValues.LOGGED,true).apply();
             sp.edit().putString(StaticValues.USERNAME,username).apply();
             sp.edit().putString(StaticValues.PASSWORD,password).apply();
@@ -91,7 +92,7 @@ public class LoginFragment extends Fragment {
             userViewModel.storeUserInput(user);
 
             FragmentTransaction transaction = createTransactionWithAnimation();
-            transaction.replace(R.id.mainFragment, new MainFragment());
+            transaction.replace(R.id.mainFragment, new MainFragment(), MainActivity.MainFragmentTag);
             transaction.commit();
 
 

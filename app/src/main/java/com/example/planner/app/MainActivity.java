@@ -21,7 +21,7 @@ import com.example.planner.viewmodels.SplashViewModel;
 public class MainActivity extends AppCompatActivity {
 
     private final String SECOND_FRAGMENT_TAG = "secondFragment";
-    private final String FIRST_FRAGMENT_TAG = "firstFragment";
+    public static final  String MainFragmentTag = "firstFragment";
     private SplashViewModel splashViewModel;
     private User user;
     private DBManager dbManager;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = createTransactionWithAnimation();
         SharedPreferences sp = getSharedPreferences(StaticValues.USER_SHARED_PREF,MODE_PRIVATE);
         if(sp.getBoolean(StaticValues.LOGGED,false)){
-            transaction.add(R.id.mainFragment, new CalendarFragment());
+            transaction.add(R.id.mainFragment, new MainFragment(), MainFragmentTag);
         }else{
             transaction.add(R.id.mainFragment, new LoginFragment());
         }

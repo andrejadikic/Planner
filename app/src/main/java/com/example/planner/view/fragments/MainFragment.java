@@ -19,30 +19,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.planner.R;
 import com.example.planner.app.StaticValues;
 import com.example.planner.database.DBManager;
+import com.example.planner.view.viewpager.PagerAdapter;
 import com.example.planner.viewmodels.PlansRecyclerViewModel;
 import com.example.planner.viewmodels.UserViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
 public class MainFragment extends Fragment {
-    private PlansRecyclerViewModel plansRecyclerViewModel;
+    private ViewPager viewPager;
     private Context context;
-    private DBManager dbManager;
-
-    private TextView startTxt;
-    private TextView endTxt;
-    private int hourStart,minuteStart;
-
-    private Button createBtn;
-    private Button cancelBtn;
 
     public MainFragment() {
-        super(R.layout.fragment_add_plan);
+        super(R.layout.fragment_bottom_navigation);
     }
     @Override
     public void onAttach(Context context) {
@@ -50,52 +46,38 @@ public class MainFragment extends Fragment {
         this.context=context;
     }
 
-    @SuppressLint("NewApi")
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        dbManager = new DBManager(getContext());
-        dbManager.open();
-        plansRecyclerViewModel = new ViewModelProvider(requireActivity(), new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())).get(PlansRecyclerViewModel.class);
-        SharedPreferences sp = context.getSharedPreferences(StaticValues.USER_SHARED_PREF,MODE_PRIVATE);
-        long id = sp.getLong(StaticValues.ID,0);
-        Toast.makeText(context,"Id"+id,Toast.LENGTH_SHORT).show();
-        init(view);
+        initViewPager(view);
+        initNavigation(view);
     }
 
-    private void init(View view){
-        initWidgets(view);
-        initActions(view);
+    private void initViewPager(View view){
+        viewPager = view.findViewById(R.id.viewPager);
+        viewPager.setAdapter(new PagerAdapter(requireActivity().getSupportFragmentManager()));
     }
-
-    private void initWidgets(View view) {
-        startTxt = view.findViewById(R.id.start);
-        endTxt = view.findViewById(R.id.end);
-        createBtn = view.findViewById(R.id.createBtn);
-        cancelBtn = view.findViewById(R.id.cancelBtn);
-    }
-
-    @SuppressLint("NewApi")
-    private void initActions(View view) {
-        startTxt.setOnClickListener(v->{
-            TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                    hourStart=hour;
-                    minuteStart=minute;
-                    startTxt.setText(String.format(Locale.getDefault(),"%02d:%02d",hourStart,minuteStart));
-                }
-            };
-
-            TimePickerDialog timePickerDialog = new TimePickerDialog(this.context,onTimeSetListener,hourStart,minuteStart,true);
-            timePickerDialog.setTitle("Select start time");
-            timePickerDialog.show();
+    private void initNavigation(View view) {
+        ((BottomNavigationView)view.findViewById(R.id.bottomNavigation)).setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                // setCurrentItem metoda viewPager samo obavesti koji je Item trenutno aktivan i onda metoda getItem u adapteru setuje odredjeni fragment za tu poziciju
+                case R.id.navigation_1: viewPager.setCurrentItem(PagerAdapter.FRAGMENT_1, false); break;
+                case R.id.navigation_2: viewPager.setCurrentItem(PagerAdapter.FRAGMENT_2, false); break;
+                case R.id.navigation_3: viewPager.setCurrentItem(PagerAdapter.FRAGMENT_3, false); break;
+            }
+            return true;
         });
+    }
 
-        createBtn.setOnClickListener(v->{
 
-        });
+    public void goToFragment(Fragment fragment, int position, LocalDate date) {
+        PagerAdapter pagerAdapter = ((PagerAdapter)viewPager.getAdapter());
+        pagerAdapter.setDate(date);
+        //Toast.makeText(context,((DailyPlanFragment)((PagerAdapter) viewPager.getAdapter()).getItem(PagerAdapter.FRAGMENT_2)).getDate().toString(),Toast.LENGTH_SHORT).show();
+        pagerAdapter.notifyDataSetChanged();
 
+        viewPager.setCurrentItem(position, false);
 
     }
 }

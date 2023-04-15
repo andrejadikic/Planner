@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.request.transition.Transition;
 import com.example.planner.R;
+import com.example.planner.app.MainActivity;
 import com.example.planner.models.Plan;
 import com.example.planner.view.recycler.adapter.CalendarViewAdapter;
+import com.example.planner.view.recycler.differ.DateDiffer;
+import com.example.planner.view.viewpager.PagerAdapter;
 import com.example.planner.viewmodels.PlansRecyclerViewModel;
 
 import java.text.SimpleDateFormat;
@@ -62,7 +66,18 @@ public class CalendarFragment extends Fragment {
         });
     }
     private void initRecycler() {
-        calendarAdapter = new CalendarViewAdapter(planViewModel.getPlansLiveData().getValue());
+        calendarAdapter = new CalendarViewAdapter(planViewModel.getPlansLiveData().getValue(),new DateDiffer(),date->{
+
+            // ovde dobijam localdate za kliknutu stavku
+
+            DailyPlanFragment dailyPlanFragment = new DailyPlanFragment(date);
+            MainFragment mainFragment = (MainFragment) requireActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.MainFragmentTag);
+            if (mainFragment != null) {
+                //Toast.makeText(requireContext(), date + "", Toast.LENGTH_SHORT).show();
+                mainFragment.goToFragment(dailyPlanFragment, PagerAdapter.FRAGMENT_2,date);
+
+            }
+        });
         recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(),7));
         recyclerView.setAdapter(calendarAdapter);
     }
