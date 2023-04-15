@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include layout="@layout/header_date" />
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/header"
+        android:gravity="center"
+        android:background="@color/pink_100">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recyclerMainLayout"
+            tools:context=".view.activities.RecyclerActivity">
+
+
+            <LinearLayout
+                android:id="@+id/week"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/mon"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="Mon."
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
+                <TextView
+                    android:id="@+id/tue"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="Mon."
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/mon"
+                    />
+                <TextView
+                    android:id="@+id/wen"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="Mon."
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tue"
+                    />
+                <TextView
+                    android:id="@+id/thu"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="Mon."
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/wen"
+                    />
+                <TextView
+                    android:id="@+id/fri"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="Mon."
+                    android:textSize="22sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/thu"
+                    />
+                <TextView
+                    android:id="@+id/sat"
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="Mon."
+                    android:textSize="22sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/fri"
+                    />
+                <TextView
+                    style="@style/RadioButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="Mon."
+                    android:textSize="22sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/sat"
+                    />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/week" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -84,10 +84,12 @@ public class LoginFragment extends Fragment {
                 return;
             }
             sp.edit().putString(StaticValues.EMAIL,email).apply();
+            sp.edit().putBoolean(StaticValues.LOGGED,true).apply();
             sp.edit().putString(StaticValues.USERNAME,username).apply();
             sp.edit().putString(StaticValues.PASSWORD,password).apply();
             sp.edit().putLong(StaticValues.ID,user.getId()).apply();
             userViewModel.storeUserInput(user);
+
             FragmentTransaction transaction = createTransactionWithAnimation();
             transaction.replace(R.id.mainFragment, new MainFragment());
             transaction.commit();

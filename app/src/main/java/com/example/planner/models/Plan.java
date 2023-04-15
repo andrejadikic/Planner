@@ -1,11 +1,13 @@
 package com.example.planner.models;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.provider.BaseColumns;
 
 import androidx.annotation.RequiresApi;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -13,7 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-
+@SuppressLint("NewApi")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,9 +30,9 @@ public class Plan implements Comparable<Plan>{
 
     public int getPriorityNumber(){
         switch (priority){
-            case "low": return 0;
-            case "mid": return 1;
-            case "high": return 2;
+            case "low": return 1;
+            case "mid": return 2;
+            case "high": return 3;
         }
         return -1;
     }
@@ -42,7 +44,19 @@ public class Plan implements Comparable<Plan>{
         return false;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
+    public String getStart(){
+        return startTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
+
+    public String getDay(){
+        return startTime.format(DateTimeFormatter.ofPattern("d"));
+    }
+
+    public String getEnd(){
+        return endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
+
     @Override
     public int compareTo(Plan plan) {
         if(startTime.toLocalTime().equals(plan.startTime.toLocalTime())){
@@ -60,6 +74,10 @@ public class Plan implements Comparable<Plan>{
         if (o == null || getClass() != o.getClass()) return false;
         Plan plan = (Plan) o;
         return id == plan.id;
+    }
+
+    public boolean equalContext(Plan plan){
+        return plan.getName().equals(name) && plan.getStart().equals(getStart()) && plan.getEnd().equals(getEnd()) && plan.getPriorityNumber()==getPriorityNumber();
     }
 
     @Override

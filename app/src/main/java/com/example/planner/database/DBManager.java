@@ -40,7 +40,7 @@ public class DBManager {
     public DBManager open(){
         userDBHelper = new UserDBHelper(context);
         plannerDBHelper = new PlannerDBHelper(context);
-        db = userDBHelper.getWritableDatabase();
+        db = plannerDBHelper.getWritableDatabase();
         return this;
     }
 
@@ -58,7 +58,6 @@ public class DBManager {
         long id = db.insertOrThrow(UserEntry.TABLE_NAME, null, contentValues);
         return new User(id,email,username,password);
     }
-
     public User loginUser(String username, String password) {
         Cursor resultSet = db.rawQuery("Select * from " + UserEntry.TABLE_NAME + " where " + UserEntry.COLUMN_USERNAME + " = '" + username + "'",null);
         resultSet.moveToFirst();
@@ -87,19 +86,20 @@ public class DBManager {
         long id = db.insertOrThrow(PlanEntry.TABLE_NAME, null, contentValues);
         return new Plan(id,userId,name,priority, startTime,endTime,details);
     }
+    //
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Map<LocalDate,List<Plan>> findPlansForUser(){
         Map<LocalDate,List<Plan>> planForDay = new HashMap<>();
 
         List<Plan> plans = new ArrayList<>();
         SharedPreferences sp = context.getSharedPreferences(StaticValues.USER_SHARED_PREF,MODE_PRIVATE);
-        long id = sp.getLong(StaticValues.ID,-1);
+        long id = sp.getLong(StaticValues.ID,0);
         if(id!=-1){
             Cursor result=db.rawQuery("select * from "+PlanEntry.TABLE_NAME+" where "+ PlanEntry.COLUMN_USER+
-                    " = " + id,null);
+                                        " = '" + id + "'",null);
             result.moveToFirst();
             while (result.moveToNext()) {
-                LocalDate date = LocalDateTime.parse(result.getString(3),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
+                LocalDate date = LocalDateTime.parse(result.getString(4),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
                 Plan plan = new Plan(
                         Long.parseLong(result.getString(0)),
                         Long.parseLong(result.getString(1)),

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.planner.R;
 import com.example.planner.database.DBManager;
 import com.example.planner.models.User;
+import com.example.planner.view.fragments.CalendarFragment;
 import com.example.planner.view.fragments.LoginFragment;
 import com.example.planner.view.fragments.MainFragment;
 import com.example.planner.view.fragments.SecondFragment;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = createTransactionWithAnimation();
         SharedPreferences sp = getSharedPreferences(StaticValues.USER_SHARED_PREF,MODE_PRIVATE);
         if(sp.getBoolean(StaticValues.LOGGED,false)){
-            transaction.add(R.id.mainFragment, new MainFragment());
+            transaction.add(R.id.mainFragment, new CalendarFragment());
         }else{
             transaction.add(R.id.mainFragment, new LoginFragment());
         }

@@ -1,5 +1,6 @@
 package com.example.planner.viewmodels;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.os.Build;
 
@@ -30,25 +31,28 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 
-
+@SuppressLint("NewApi")
 public class PlansRecyclerViewModel extends AndroidViewModel {
     private DBManager dbManager;
     private Map<LocalDate, List<Plan>> plansForDay;
 
     private MutableLiveData<Map<LocalDate, List<Plan>>> plansLiveData;
 
-    public PlansRecyclerViewModel() {
-        super();
+    @SuppressLint("NewApi")
+    public PlansRecyclerViewModel(@NonNull Application application) {
+        super(application);
         dbManager = new DBManager(getApplication());
+        dbManager.open();
         plansLiveData = new MutableLiveData<>();
         plansForDay = new HashMap<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            fetch();
-        }
+        fetch();
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void fetch(){
-        plansForDay = dbManager.findPlansForUser();
+        for(int i=-20;i<=300;i++){
+            plansForDay.putIfAbsent(LocalDate.now().plusDays(i), new ArrayList<>());
+        }
+        Map<LocalDate, List<Plan>> plans=dbManager.findPlansForUser();
         sort();
         updateLiveList();
     }
@@ -126,11 +130,18 @@ public class PlansRecyclerViewModel extends AndroidViewModel {
         updateLiveList();
     }
 
+    public int colorForDate(LocalDate date){
+        if(!plansForDay.containsKey(date))
+            return 0;
+        plansForDay.get(date).sort(new ComparatorByPriority("low"));
+        return plansForDay.get(date).get(plansForDay.get(date).size()-1).getPriorityNumber();
+    }
+
 
 
     private void updateLiveList(){
-        Map<LocalDate, List<Plan>> listToSubmit = new HashMap<>(plansForDay);
-        plansLiveData.setValue(listToSubmit);
+        //Map<LocalDate, List<Plan>> listToSubmit = new HashMap<>(plansForDay);
+        plansLiveData.setValue(plansForDay);
     }
 
     public Map<LocalDate, List<Plan>> getPlansForDay() {
@@ -142,7 +153,13 @@ public class PlansRecyclerViewModel extends AndroidViewModel {
         updateLiveList();
     }
 
+
+
     public LiveData<Map<LocalDate, List<Plan>>> getPlansLiveData() {
+        if (plansLiveData == null) {
+            plansLiveData = new MutableLiveData<>();
+            fetch();
+        }
         return plansLiveData;
     }
 

@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class PlannerDBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "planner.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public PlannerDBHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
