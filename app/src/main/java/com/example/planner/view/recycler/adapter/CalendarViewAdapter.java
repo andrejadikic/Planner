@@ -48,7 +48,7 @@ public class CalendarViewAdapter extends RecyclerView.Adapter<CalendarViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
-        LocalDate date = (LocalDate) planMap.keySet().toArray()[position];
+        LocalDate date = days.get(position);
         List<Plan> plansForDay = planMap.get(date);
         if(plansForDay.isEmpty()){
             holder.bind(0,date.getDayOfMonth());
