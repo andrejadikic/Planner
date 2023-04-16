@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.planner.R;
 import com.example.planner.app.StaticValues;
+import com.example.planner.models.Plan;
 import com.example.planner.viewmodels.PlansRecyclerViewModel;
 
 import java.time.LocalDate;
@@ -30,9 +31,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+
 @SuppressLint("NewApi")
-public class AddPlanFragment extends Fragment {
+public class EditPlanFragment extends Fragment {
     private PlansRecyclerViewModel plansRecyclerViewModel;
+    private Plan plan;
     private Context context;
     private TextView dateTxt;
     private TextView startTxt;
@@ -44,12 +47,15 @@ public class AddPlanFragment extends Fragment {
     private LocalDate date;
     private LocalDateTime start, end;
     private String priority;
-    private Button createBtn;
+    private Button editBtn;
     private Button cancelBtn;
 
-    public AddPlanFragment(LocalDate date) {
+    public EditPlanFragment(LocalDate date, Plan plan) {
         super(R.layout.fragment_add_plan);
         this.date = date;
+        this.plan = plan;
+        start = plan.getStartTime();
+        end = plan.getEndTime();
     }
     @Override
     public void onAttach(Context context) {
@@ -62,13 +68,12 @@ public class AddPlanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         plansRecyclerViewModel = new ViewModelProvider(requireActivity(), new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())).get(PlansRecyclerViewModel.class);
-        SharedPreferences sp = context.getSharedPreferences(StaticValues.USER_SHARED_PREF,MODE_PRIVATE);
-        long id = sp.getLong(StaticValues.ID,0);
         init(view);
     }
 
     private void init(View view){
         initWidgets(view);
+        updateUi();
         initActions(view);
         initListener(view);
     }
@@ -80,9 +85,34 @@ public class AddPlanFragment extends Fragment {
         titleTxt = view.findViewById(R.id.title);
         detailsTxt = view.findViewById(R.id.details);
         radioGroup = view.findViewById(R.id.radioGroup);
-        createBtn = view.findViewById(R.id.createBtn);
+        editBtn = view.findViewById(R.id.saveBtn);
         cancelBtn = view.findViewById(R.id.cancelBtn);
-        dateTxt.setText(date.format(DateTimeFormatter.ofPattern("dd.MMMM.yyyy")));
+
+    }
+    private void updateUi() {
+        dateTxt.setText(start.format(DateTimeFormatter.ofPattern("dd.MMMM.yyyy")));
+        startTxt.setText(start.format(DateTimeFormatter.ofPattern("hh:mm")));
+        endTxt.setText(start.format(DateTimeFormatter.ofPattern("hh:mm")));
+        titleTxt.setText(plan.getName());
+        detailsTxt.setText(plan.getDetails());
+        switch (plan.getPriorityNumber()) {
+            case 1:
+                radioGroup.check(R.id.low);
+                radioGroup.setBackgroundResource(R.color.low_priority);
+                break;
+            case 2:
+                radioGroup.check(R.id.mid);
+                radioGroup.setBackgroundResource(R.color.mid_priority);
+                break;
+            case 3:
+                radioGroup.check(R.id.high);
+                radioGroup.setBackgroundResource(R.color.high_priority);
+                break;
+            default:
+                radioGroup.setBackgroundResource(R.color.pink_100);
+                break;
+        }
+        priority = plan.getPriority();
     }
 
     private void initActions(View view) {
@@ -117,8 +147,8 @@ public class AddPlanFragment extends Fragment {
             timePickerDialog.show();
         });
 
-        createBtn.setOnClickListener(v->{
-            if(!plansRecyclerViewModel.addPlanForDay(date,start,end,titleTxt.getText().toString(),detailsTxt.getText().toString(),priority)){
+        editBtn.setOnClickListener(v->{
+            if(!plansRecyclerViewModel.editPlanForDay(date,plan,start,end,titleTxt.getText().toString(),detailsTxt.getText().toString(),priority)){
                 Toast.makeText(context,"Something went wrong, try agaim",Toast.LENGTH_SHORT).show();
             }
 
@@ -135,7 +165,7 @@ public class AddPlanFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton checked = (RadioButton)view.findViewById(checkedId);
                 checked.setBackgroundResource(R.color.gray);
-                priority = checked.getText().toString();
+                priority = checked.getText().toString().toLowerCase();
             }
         });
     }

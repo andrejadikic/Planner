@@ -2,6 +2,7 @@ package com.example.planner.database;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,6 +17,8 @@ import com.example.planner.models.Plan;
 import com.example.planner.models.Plan.*;
 import com.example.planner.models.User;
 import com.example.planner.models.User.*;
+import com.example.planner.models.comparators.ComparatorByDate;
+import com.example.planner.models.comparators.ComparatorByPriority;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
+@SuppressLint("NewApi")
 public class DBManager {
     private PlannerDBHelper plannerDBHelper;
     private UserDBHelper userDBHelper;
@@ -74,7 +77,7 @@ public class DBManager {
         return i;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public Plan createPlan(Long userId, String name, String priority, LocalDateTime startTime, LocalDateTime endTime, String details){
         ContentValues contentValues = new ContentValues();
         contentValues.put(PlanEntry.COLUMN_USER, userId);
@@ -86,8 +89,24 @@ public class DBManager {
         long id = db.insertOrThrow(PlanEntry.TABLE_NAME, null, contentValues);
         return new Plan(id,userId,name,priority, startTime,endTime,details);
     }
+
+
+    public Plan editPlan(Long id,Long userId, String name, String priority, LocalDateTime startTime, LocalDateTime endTime, String details){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PlanEntry.COLUMN_NAME, name);
+        contentValues.put(PlanEntry.COLUMN_PRIORITY, name);
+        contentValues.put(PlanEntry.COLUMN_STARTDATE, startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        contentValues.put(PlanEntry.COLUMN_ENDDATE, endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        contentValues.put(PlanEntry.COLUMN_DETAILS, details);
+        int i = db.update(UserEntry.TABLE_NAME, contentValues, PlanEntry._ID + " = ? "  , new String[]{String.valueOf(id)});
+        return new Plan(id,userId,name,priority, startTime,endTime,details);
+    }
+
+    public void deletePlan(Long id){
+        db.delete(PlanEntry.TABLE_NAME,PlanEntry._ID + "=?", new String[]{String.valueOf(id)});
+    }
     //
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public Map<LocalDate,List<Plan>> findPlansForUser(){
         Map<LocalDate,List<Plan>> planForDay = new HashMap<>();
 
@@ -117,7 +136,7 @@ public class DBManager {
         }
 
         for(LocalDate localDate:planForDay.keySet()){
-            Collections.sort(Objects.requireNonNull(planForDay.get(localDate)));
+            Objects.requireNonNull(planForDay.get(localDate)).sort(new ComparatorByPriority("low").thenComparing(new ComparatorByDate()));
         }
         return planForDay;
     }

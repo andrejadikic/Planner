@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Plan implements Comparable<Plan>{
+public class Plan {
     private long id;
     private long userId;
     private String name;
@@ -57,16 +57,16 @@ public class Plan implements Comparable<Plan>{
         return endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
-    @Override
-    public int compareTo(Plan plan) {
-        if(startTime.toLocalTime().equals(plan.startTime.toLocalTime())){
-            if(getPriorityNumber() <= plan.getPriorityNumber())
-                return 1;
-            else
-                return -1;
-        }
-        return startTime.toLocalTime().compareTo(plan.startTime.toLocalTime());
-    }
+//    @Override
+//    public int compareTo(Plan plan) {
+//        if(startTime.toLocalTime().equals(plan.startTime.toLocalTime())){
+//            if(getPriorityNumber() <= plan.getPriorityNumber())
+//                return 1;
+//            else
+//                return -1;
+//        }
+//        return startTime.toLocalTime().compareTo(plan.startTime.toLocalTime());
+//    }
 
     @Override
     public boolean equals(Object o) {

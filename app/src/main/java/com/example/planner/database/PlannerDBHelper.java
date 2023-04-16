@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class PlannerDBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "planner.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
 
     public PlannerDBHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,17 +45,20 @@ public class PlannerDBHelper extends SQLiteOpenHelper {
         String[] priority = new String[]{"low","mid","high"};
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Random random = new Random();
-        for(int i=0;i<20;i++){
+        for(int i=0;i<50;i++){
             ContentValues values = new ContentValues();
             LocalDateTime start = LocalDateTime.now().plusMonths(random.nextInt(3)-1).plusDays(random.nextInt(20)-1).plusHours(random.nextInt(20)-3).plusMinutes(random.nextInt(20)-2);
-            LocalDateTime end = start.plusMinutes(random.nextInt(100));
-            values.put(COLUMN_USER, 1);
-            values.put(COLUMN_NAME, "Title "+i);
-            values.put(COLUMN_PRIORITY, priority[random.nextInt(3)]);
-            values.put(COLUMN_STARTDATE, start.format(formatter));
-            values.put(COLUMN_ENDDATE, end.format(formatter));
-            values.put(COLUMN_DETAILS, "Details for plan " + i);
-            db.insert(TABLE_NAME, null, values);
+            for(int j=1;j<=10;j++){
+                start = start.plusMinutes(random.nextInt(200)-100);
+                LocalDateTime end = start.plusMinutes(random.nextInt(100));
+                values.put(COLUMN_USER, 1);
+                values.put(COLUMN_NAME, "Title "+i+j);
+                values.put(COLUMN_PRIORITY, priority[random.nextInt(3)]);
+                values.put(COLUMN_STARTDATE, start.format(formatter));
+                values.put(COLUMN_ENDDATE, end.format(formatter));
+                values.put(COLUMN_DETAILS, "Details for plan " + i+j);
+                db.insert(TABLE_NAME, null, values);
+            }
         }
     }
 

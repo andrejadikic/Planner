@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 
 @SuppressLint("NewApi")
-
-
 public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder> {
 
     private final Consumer<Plan> onPlanClicked;
@@ -87,13 +85,27 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
         }
 
         public void bind(Plan plan) {
+            switch (plan.getPriorityNumber()) {
+                case 1:
+                    itemView.setBackgroundResource(R.color.low_priority);
+                    break;
+                case 2:
+                    itemView.setBackgroundResource(R.color.mid_priority);
+                    break;
+                case 3:
+                    itemView.setBackgroundResource(R.color.high_priority);
+                    break;
+                default:
+                    itemView.setBackgroundResource(R.color.pink_100);
+                    break;
+            }
+            if(plan.pastObligation())
+                itemView.setBackgroundResource(R.color.gray);
+
             ((TextView) itemView.findViewById(R.id.start)).setText(plan.getStart());
             ((TextView) itemView.findViewById(R.id.end)).setText(plan.getEnd());
             ((TextView) itemView.findViewById(R.id.title)).setText(plan.getName());
-            itemView.findViewById(R.id.plan_list).setBackgroundColor(StaticValues.colors[plan.getPriorityNumber()]);
+            //itemView.findViewById(R.id.plan_list).setBackgroundColor(StaticValues.colors[plan.getPriorityNumber()]);
         }
-
     }
-
-
 }

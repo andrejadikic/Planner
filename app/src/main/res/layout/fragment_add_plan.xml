@@ -35,21 +35,19 @@
                 <RadioButton
                     android:id="@+id/low"
                     style="@style/RadioButton"
-                    android:onClick="onRadioButtonClicked"
                     android:text="@string/low"
+                    android:checked="true"
                     android:background="@color/low_priority"/>
 
                 <RadioButton
                     android:id="@+id/mid"
                     style="@style/RadioButton"
-                    android:onClick="onRadioButtonClicked"
                     android:text="@string/mid"
                     android:background="@color/mid_priority"/>
 
                 <RadioButton
                     android:id="@+id/high"
                     style="@style/RadioButton"
-                    android:onClick="onRadioButtonClicked"
                     android:text="@string/high"
                     android:background="@color/high_priority"/>
             </RadioGroup>

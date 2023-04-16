@@ -1,7 +1,10 @@
 package com.example.planner.viewmodels;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -35,7 +38,6 @@ import lombok.Setter;
 public class PlansRecyclerViewModel extends AndroidViewModel {
     private DBManager dbManager;
     private Map<LocalDate, List<Plan>> plansForDay;
-
     private MutableLiveData<Map<LocalDate, List<Plan>>> plansLiveData;
 
     @SuppressLint("NewApi")
@@ -59,72 +61,98 @@ public class PlansRecyclerViewModel extends AndroidViewModel {
 
     private void sort(){
         for(LocalDate date:plansForDay.keySet()){
-            Collections.sort(plansForDay.get(date));
+            plansForDay.get(date).sort(new ComparatorByPriority("low").thenComparing(new ComparatorByDate()));
         }
     }
 
-    public void addPlanForDay(String dateStr, Plan plan){
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            LocalDate date = LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
-            if(!plansForDay.containsKey(date)){
-                plansForDay.put(date,new ArrayList<>());
-            }
-            plansForDay.get(date).add(plan);
-            Collections.sort(plansForDay.get(date));
+    public boolean addPlanForDay(LocalDate date, LocalDateTime start, LocalDateTime end, String title, String details, String priority){
+        SharedPreferences sp = getApplication().getSharedPreferences(StaticValues.USER_SHARED_PREF,MODE_PRIVATE);
+        long userId = sp.getLong(StaticValues.ID, 0);
+        if(!plansForDay.containsKey(date)){
+            plansForDay.put(date,new ArrayList<>());
+        }
+        if(!checkTime(date,start,end))
+            return false;
+        Plan plan = dbManager.createPlan(userId,title,priority.toLowerCase(),start,end,details);
+        plansForDay.get(date).add(plan);
+        plansForDay.get(date).sort(new ComparatorByPriority("low").thenComparing(new ComparatorByDate()));
+        updateLiveList();
+        return true;
+    }
+
+    private boolean checkTime(LocalDate date, LocalDateTime start, LocalDateTime end) {
+        List<Plan> plans = plansForDay.get(date);
+        for(Plan plan:plans){
+            if(start.isBefore(plan.getEndTime()) && plan.getStartTime().isBefore(end))
+                return false;
+        }
+        return true;
+    }
+
+    public void deletePlanForDay(LocalDate date, Plan plan){
+        if(plansForDay.containsKey(date)){
+            dbManager.deletePlan(plan.getId());
+            plansForDay.get(date).remove(plan);
             updateLiveList();
         }
     }
 
-    public void deletePlanForDay(String dateStr, Plan plan){
+    public void editPlanForDay(LocalDate date, Plan oldPlan,Plan plan){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            LocalDate date = LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
-            if(plansForDay.containsKey(date)){
-                plansForDay.get(date).remove(plan);
-                updateLiveList();
-            }
-        }
-    }
-
-    public void editPlanForDay(String dateStr, Plan oldPlan,Plan plan){
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            LocalDate date = LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
             if(plansForDay.containsKey(date)){
                 plansForDay.get(date).set(plansForDay.get(date).indexOf(oldPlan),plan);
-                Collections.sort(plansForDay.get(date));
+                plansForDay.get(date).sort(new ComparatorByPriority("low").thenComparing(new ComparatorByDate()));
                 updateLiveList();
             }
         }
     }
 
-    public void filterPlans(String dateStr,String filter, boolean pastObl, String priority) {
-        LocalDate date = null;
+    public boolean editPlanForDay(LocalDate date, Plan oldPlan, LocalDateTime start, LocalDateTime end, String title, String details, String priority){
+        if(!plansForDay.containsKey(date) || !checkTime(date,start,end)){
+            return false;
+        }
+        SharedPreferences sp = getApplication().getSharedPreferences(StaticValues.USER_SHARED_PREF,MODE_PRIVATE);
+        long userId = sp.getLong(StaticValues.ID, 0);
+        Plan plan = dbManager.editPlan(oldPlan.getId(),userId,title,priority.toLowerCase(),start,end,details);
+        plansForDay.get(date).set(plansForDay.get(date).indexOf(oldPlan),plan);
+        plansForDay.get(date).sort(new ComparatorByPriority("low").thenComparing(new ComparatorByDate()));
+        updateLiveList();
+        return true;
+    }
+
+    public void filterPlans(LocalDate date, String filter, boolean pastObl, String priority) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            date = LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
             if(!plansForDay.containsKey(date))
                 return;
         }
-        List<Plan> filtered= plansForDay.get(date).stream().filter(plan -> {
+        List<Plan> filtered = plansForDay.get(date).stream().filter(plan -> {
                     if(pastObl)
-                        return plan.getName().toLowerCase().contains(filter.toLowerCase());
-                    return plan.getName().toLowerCase().contains(filter.toLowerCase()) && !plan.pastObligation();
+                        return plan.getName().toLowerCase().startsWith(filter.toLowerCase());
+                    return plan.getName().toLowerCase().startsWith(filter.toLowerCase()) && !plan.pastObligation();
                 }
 
-        ).collect(Collectors.toList());
+        ).sorted(new ComparatorByPriority(priority).thenComparing(new ComparatorByDate())).collect(Collectors.toList());
         filtered.sort(new ComparatorByDate().thenComparing(new ComparatorByPriority(priority)));
-        plansForDay.get(date).clear();
-        plansForDay.get(date).addAll(filtered);
-        updateLiveList();
+        Map<LocalDate, List<Plan>> filteredMap = new HashMap<>();
+        for (Map.Entry<LocalDate, List<Plan>> entry : plansForDay.entrySet()) {
+            LocalDate key = entry.getKey();
+            List<Plan> value = new ArrayList<>(entry.getValue());
+            filteredMap.put(key, value);
+        }
+        filteredMap.get(date).clear();
+        filteredMap.get(date).addAll(new ArrayList<>(filtered));
+        filteredMap.get(date).sort(new ComparatorByDate().thenComparing(new ComparatorByPriority(priority)));
+        plansLiveData.setValue(filteredMap);
     }
-    public void filterCheck(String dateStr,boolean pastObl){
-        LocalDate date = null;
+
+    public void filterCheck(LocalDate date, boolean pastObl){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            date = LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
             if(!plansForDay.containsKey(date))
                 return;
         }
         List<Plan> filtered= plansForDay.get(date).stream().filter(plan ->
             plan.pastObligation()==pastObl).collect(Collectors.toList());
-        Collections.sort(filtered);
+        filtered.sort(new ComparatorByPriority("low").thenComparing(new ComparatorByDate()));
         plansForDay.get(date).clear();
         plansForDay.get(date).addAll(filtered);
         updateLiveList();
@@ -140,8 +168,13 @@ public class PlansRecyclerViewModel extends AndroidViewModel {
 
 
     private void updateLiveList(){
-        //Map<LocalDate, List<Plan>> listToSubmit = new HashMap<>(plansForDay);
-        plansLiveData.setValue(plansForDay);
+        Map<LocalDate, List<Plan>> deepCopy = new HashMap<>();
+        for (Map.Entry<LocalDate, List<Plan>> entry : plansForDay.entrySet()) {
+            LocalDate key = entry.getKey();
+            List<Plan> value = new ArrayList<>(entry.getValue());
+            deepCopy.put(key, value);
+        }
+        plansLiveData.setValue(deepCopy);
     }
 
     public Map<LocalDate, List<Plan>> getPlansForDay() {
@@ -162,8 +195,4 @@ public class PlansRecyclerViewModel extends AndroidViewModel {
         }
         return plansLiveData;
     }
-
-
-
-
 }

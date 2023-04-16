@@ -13,7 +13,7 @@ import com.example.planner.models.User.UserEntry;
 
 public class UserDBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "planner.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
 
 
     public UserDBHelper(@Nullable Context context) {

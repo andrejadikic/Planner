@@ -35,21 +35,19 @@
                 <RadioButton
                     android:id="@+id/low"
                     style="@style/RadioButton"
-                    android:onClick="onRadioButtonClicked"
                     android:text="@string/low"
+                    android:checked="true"
                     android:background="@color/low_priority"/>
 
                 <RadioButton
                     android:id="@+id/mid"
                     style="@style/RadioButton"
-                    android:onClick="onRadioButtonClicked"
                     android:text="@string/mid"
                     android:background="@color/mid_priority"/>
 
                 <RadioButton
                     android:id="@+id/high"
                     style="@style/RadioButton"
-                    android:onClick="onRadioButtonClicked"
                     android:text="@string/high"
                     android:background="@color/high_priority"/>
             </RadioGroup>
@@ -96,7 +94,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/title" />
 
             <Button
-                android:id="@+id/createBtn"
+                android:id="@+id/saveBtn"
                 style="@style/OkButton"
                 android:text="@string/save"
                 app:layout_constraintEnd_toStartOf="@+id/cancelBtn"
@@ -108,7 +106,7 @@
                 style="@style/BadButton"
                 android:text="@string/cancel"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/createBtn"
+                app:layout_constraintStart_toEndOf="@+id/saveBtn"
                 app:layout_constraintBottom_toBottomOf="parent"
                 />
 
