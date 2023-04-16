@@ -16,6 +16,7 @@ import com.example.planner.view.fragments.ProfileFragment;
 import com.example.planner.view.fragments.ShowPlanFragment;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SuppressLint("NewApi")
@@ -34,7 +35,13 @@ public class ShowPagerAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        return new ShowPlanFragment(date,planList.get(position));
+        if(position>0 && position<planList.size())
+            return new ShowPlanFragment(date,planList.get(position));
+        return new ShowPlanFragment(date,new Plan(1,1,"nsjnjs","low", LocalDateTime.now(),LocalDateTime.now().plusMinutes(30),"detaljii"));
+    }
+
+    public int getPosition(Plan plan){
+        return planList.indexOf(plan);
     }
 
     @Override

@@ -56,7 +56,7 @@ public class MainFragment extends Fragment {
 
     private void initViewPager(View view){
         viewPager = view.findViewById(R.id.viewPager);
-        viewPager.setAdapter(new PagerAdapter(requireActivity().getSupportFragmentManager()));
+        viewPager.setAdapter(new PagerAdapter(getChildFragmentManager()));
     }
     private void initNavigation(View view) {
         ((BottomNavigationView)view.findViewById(R.id.bottomNavigation)).setOnItemSelectedListener(item -> {

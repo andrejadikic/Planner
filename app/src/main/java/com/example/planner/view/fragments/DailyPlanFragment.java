@@ -31,6 +31,7 @@ import com.example.planner.view.recycler.adapter.PlanAdapter;
 import com.example.planner.view.recycler.differ.PlanDiffer;
 import com.example.planner.view.viewpager.PagerAdapter;
 import com.example.planner.viewmodels.PlansRecyclerViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -77,7 +78,6 @@ public class DailyPlanFragment extends Fragment {
     }
 
     private void initObservers() {
-        Toast.makeText(requireContext(),date.toString(),Toast.LENGTH_SHORT).show();
         planViewModel.getPlansLiveData().observe(getViewLifecycleOwner(), new Observer<Map<LocalDate, List<Plan>>>() {
             @Override
             public void onChanged(Map<LocalDate, List<Plan>> newPlanMap) {
@@ -89,18 +89,24 @@ public class DailyPlanFragment extends Fragment {
     private void initRecycler() {
         planAdapter = new PlanAdapter(planViewModel.getPlansLiveData().getValue(),date,new PlanDiffer(),plan -> {
             FragmentTransaction transaction = createTransactionWithAnimation();
-            transaction.replace(R.id.mainFragment, new ShowPlanFragment(date,plan), MainActivity.MainFragmentTag);
+            transaction.replace(R.id.mainFragment, new MainShowFragment(date,plan));
             transaction.commit();
-            //Toast.makeText(requireContext(), plan.getId() + "", Toast.LENGTH_SHORT).show();
-            //viewPager.setCurrentItem(PagerAdapter.FRAGMENT_2, false);
         });
-        //calendarAdapter = new CalendarViewAdapter(planViewModel.getPlansLiveData().getValue());
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         recyclerView.setAdapter(planAdapter);
     }
 
     private void initListeners(View view) {
         month.setText(date.format(DateTimeFormatter.ofPattern("dd.MMMM")));
+
+        view.findViewById(R.id.floatingAdd).setOnClickListener(view1 -> {
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            // Dodajemo transakciju na backstack kako bi se pritisokm na back transakcija rollback-ovala
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.mainFragment, new AddPlanFragment(date));
+            transaction.commit();
+        });
+
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

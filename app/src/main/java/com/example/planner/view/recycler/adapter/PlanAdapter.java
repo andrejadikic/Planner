@@ -105,6 +105,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
             ((TextView) itemView.findViewById(R.id.start)).setText(plan.getStart());
             ((TextView) itemView.findViewById(R.id.end)).setText(plan.getEnd());
             ((TextView) itemView.findViewById(R.id.title)).setText(plan.getName());
+
             //itemView.findViewById(R.id.plan_list).setBackgroundColor(StaticValues.colors[plan.getPriorityNumber()]);
         }
     }

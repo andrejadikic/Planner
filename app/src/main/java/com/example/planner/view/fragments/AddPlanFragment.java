@@ -118,9 +118,11 @@ public class AddPlanFragment extends Fragment {
         });
 
         createBtn.setOnClickListener(v->{
+            Toast.makeText(requireContext(),priority,Toast.LENGTH_SHORT).show();
             if(!plansRecyclerViewModel.addPlanForDay(date,start,end,titleTxt.getText().toString(),detailsTxt.getText().toString(),priority)){
                 Toast.makeText(context,"Something went wrong, try agaim",Toast.LENGTH_SHORT).show();
-            }
+            }else
+                getActivity().onBackPressed();
 
         });
 
@@ -135,7 +137,7 @@ public class AddPlanFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton checked = (RadioButton)view.findViewById(checkedId);
                 checked.setBackgroundResource(R.color.gray);
-                priority = checked.getText().toString();
+                priority = checked.getText().toString().toLowerCase();
             }
         });
     }

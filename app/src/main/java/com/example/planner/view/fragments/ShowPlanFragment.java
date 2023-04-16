@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,8 +36,6 @@ public class ShowPlanFragment extends Fragment {
     private LocalDate date;
     private Plan plan;
 
-    private ShowPagerAdapter viewPager;
-
 
     public ShowPlanFragment(LocalDate date, Plan plan) {
         super(R.layout.fragment_show_plan);
@@ -48,12 +47,12 @@ public class ShowPlanFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Toast.makeText(requireContext(),"neee",Toast.LENGTH_SHORT);
         initView(view);
         updateUi();
         planViewModel = new ViewModelProvider(requireActivity(), new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())).get(PlansRecyclerViewModel.class);
         planViewModel.fetch();
-        initRecycler();
-        //initObservers();
+        initObservers();
         initListeners(view);
 
     }
@@ -80,16 +79,11 @@ public class ShowPlanFragment extends Fragment {
         planViewModel.getPlansLiveData().observe(getViewLifecycleOwner(), new Observer<Map<LocalDate, List<Plan>>>() {
             @Override
             public void onChanged(Map<LocalDate, List<Plan>> newPlanMap) {
-                viewPager.setPlanList(newPlanMap.get(date));// Postavite novu mapu u adapter kada se ona promeni
                 if(newPlanMap.get(date).contains(plan)){
                     plan = newPlanMap.get(date).get((newPlanMap.get(date).indexOf(plan)));
                 }
             }
         });
-    }
-
-    private void initRecycler() {
-        //viewPager =
     }
 
     private void initListeners(View view) {
@@ -104,7 +98,7 @@ public class ShowPlanFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 planViewModel.deletePlanForDay(date,plan);
-                getActivity().onBackPressed();
+                //getActivity().onBackPressed();
             }
         });
     }
