@@ -1,37 +1,32 @@
 package com.example.planner.view.recycler.adapter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Consumer;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.planner.R;
-import com.example.planner.app.StaticValues;
 import com.example.planner.models.Plan;
-import com.example.planner.view.fragments.EditPlanFragment;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 @SuppressLint("NewApi")
-public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder> {
+public class DetailsPlanAdapter extends RecyclerView.Adapter<DetailsPlanAdapter.PlanViewHolder> {
     private final Consumer<Plan> onPlanClicked;
     private final Consumer<Plan> onDeleteClicked;
     private final Consumer<Plan> onEditClicked;
-    private LocalDate date;
+    private final LocalDate date;
     private Map<LocalDate, List<Plan>> planMap;
 
-    public PlanAdapter(Map<LocalDate, List<Plan>> planMap, LocalDate date, @NonNull DiffUtil.ItemCallback<Plan> diffCallback, Consumer<Plan> onPlanClicked, Consumer<Plan> onDeleteClicked, Consumer<Plan> onEditClicked) {
+    public DetailsPlanAdapter(Map<LocalDate, List<Plan>> planMap, LocalDate date, @NonNull DiffUtil.ItemCallback<Plan> diffCallback, Consumer<Plan> onPlanClicked, Consumer<Plan> onDeleteClicked, Consumer<Plan> onEditClicked) {
         this.planMap = planMap;
         this.date = date;
         this.onPlanClicked = onPlanClicked;
@@ -48,7 +43,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
     @Override
     public PlanViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.plan_list_item, parent, false);
+                .inflate(R.layout.fragment_show_plan, parent, false);
         return new PlanViewHolder(itemView, position -> {
             Plan plan = getItem(position);
             onPlanClicked.accept(plan);
@@ -74,6 +69,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
     public Plan getItem(int position) {
         return planMap.get(date).get(position);
     }
+    public int getPosition(Plan plan){ return planMap.get(date).indexOf(plan);}
 
 
 
@@ -86,12 +82,12 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
                     onItemClicked.accept(getBindingAdapterPosition());
                 }
             });
-            itemView.findViewById(R.id.edit).setOnClickListener(view -> {
+            itemView.findViewById(R.id.editBtn).setOnClickListener(view -> {
                 if (getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
                     onEditClicked.accept(getBindingAdapterPosition());
                 }
             });
-            itemView.findViewById(R.id.delete).setOnClickListener(view -> {
+            itemView.findViewById(R.id.deleteBtn).setOnClickListener(view -> {
                 if (getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
                     onDeleteClicked.accept(getBindingAdapterPosition());
                 }
@@ -119,6 +115,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
             ((TextView) itemView.findViewById(R.id.start)).setText(plan.getStart());
             ((TextView) itemView.findViewById(R.id.end)).setText(plan.getEnd());
             ((TextView) itemView.findViewById(R.id.title)).setText(plan.getName());
+            ((TextView) itemView.findViewById(R.id.details)).setText(plan.getDetails());
 
 //            itemView.findViewById(R.id.edit).setOnClickListener(view -> {
 //                FragmentTransaction transaction = ((AppCompatActivity) view.getContext()).getSupportFragmentManager().beginTransaction();

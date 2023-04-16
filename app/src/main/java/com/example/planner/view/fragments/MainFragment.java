@@ -74,9 +74,7 @@ public class MainFragment extends Fragment {
     public void goToFragment(Fragment fragment, int position, LocalDate date) {
         PagerAdapter pagerAdapter = ((PagerAdapter)viewPager.getAdapter());
         pagerAdapter.setDate(date);
-        //Toast.makeText(context,((DailyPlanFragment)((PagerAdapter) viewPager.getAdapter()).getItem(PagerAdapter.FRAGMENT_2)).getDate().toString(),Toast.LENGTH_SHORT).show();
         pagerAdapter.notifyDataSetChanged();
-
         viewPager.setCurrentItem(position, false);
 
     }

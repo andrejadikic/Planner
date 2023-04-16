@@ -51,7 +51,7 @@ public class EditPlanFragment extends Fragment {
     private Button cancelBtn;
 
     public EditPlanFragment(LocalDate date, Plan plan) {
-        super(R.layout.fragment_add_plan);
+        super(R.layout.fragment_edit_plan);
         this.date = date;
         this.plan = plan;
         start = plan.getStartTime();
@@ -92,7 +92,7 @@ public class EditPlanFragment extends Fragment {
     private void updateUi() {
         dateTxt.setText(start.format(DateTimeFormatter.ofPattern("dd.MMMM.yyyy")));
         startTxt.setText(start.format(DateTimeFormatter.ofPattern("hh:mm")));
-        endTxt.setText(start.format(DateTimeFormatter.ofPattern("hh:mm")));
+        endTxt.setText(end.format(DateTimeFormatter.ofPattern("hh:mm")));
         titleTxt.setText(plan.getName());
         detailsTxt.setText(plan.getDetails());
         switch (plan.getPriorityNumber()) {
@@ -117,14 +117,11 @@ public class EditPlanFragment extends Fragment {
 
     private void initActions(View view) {
         startTxt.setOnClickListener(v->{
-            TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                    hourStart=hour;
-                    minuteStart=minute;
-                    start = LocalDateTime.of(date, LocalTime.of(hour,minute));
-                    startTxt.setText(String.format(Locale.getDefault(),"%02d:%02d",hourStart,minuteStart));
-                }
+            TimePickerDialog.OnTimeSetListener onTimeSetListener = (timePicker, hour, minute) -> {
+                hourStart=hour;
+                minuteStart=minute;
+                start = LocalDateTime.of(date, LocalTime.of(hour,minute));
+                startTxt.setText(String.format(Locale.getDefault(),"%02d:%02d",hourStart,minuteStart));
             };
 
             TimePickerDialog timePickerDialog = new TimePickerDialog(this.context,onTimeSetListener,hourStart,minuteStart,true);
@@ -132,14 +129,11 @@ public class EditPlanFragment extends Fragment {
             timePickerDialog.show();
         });
         endTxt.setOnClickListener(v->{
-            TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                    hourStart=hour;
-                    minuteStart=minute;
-                    end = LocalDateTime.of(date, LocalTime.of(hour,minute));
-                    startTxt.setText(String.format(Locale.getDefault(),"%02d:%02d",hourStart,minuteStart));
-                }
+            TimePickerDialog.OnTimeSetListener onTimeSetListener = (timePicker, hour, minute) -> {
+                hourStart=hour;
+                minuteStart=minute;
+                end = LocalDateTime.of(date, LocalTime.of(hour,minute));
+                endTxt.setText(String.format(Locale.getDefault(),"%02d:%02d",hourStart,minuteStart));
             };
 
             TimePickerDialog timePickerDialog = new TimePickerDialog(this.context,onTimeSetListener,hourStart,minuteStart,true);
@@ -151,7 +145,6 @@ public class EditPlanFragment extends Fragment {
             if(!plansRecyclerViewModel.editPlanForDay(date,plan,start,end,titleTxt.getText().toString(),detailsTxt.getText().toString(),priority)){
                 Toast.makeText(context,"Something went wrong, try agaim",Toast.LENGTH_SHORT).show();
             }
-
         });
 
         cancelBtn.setOnClickListener(v->{
@@ -160,13 +153,10 @@ public class EditPlanFragment extends Fragment {
     }
 
     private void initListener(View view) {
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton checked = (RadioButton)view.findViewById(checkedId);
-                checked.setBackgroundResource(R.color.gray);
-                priority = checked.getText().toString().toLowerCase();
-            }
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton checked = (RadioButton)view.findViewById(checkedId);
+            checked.setBackgroundResource(R.color.gray);
+            priority = checked.getText().toString().toLowerCase();
         });
     }
 }

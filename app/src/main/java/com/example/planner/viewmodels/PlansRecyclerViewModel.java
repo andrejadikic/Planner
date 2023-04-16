@@ -88,6 +88,14 @@ public class PlansRecyclerViewModel extends AndroidViewModel {
         }
         return true;
     }
+    private boolean checkTime(LocalDate date, LocalDateTime start, LocalDateTime end, Plan oldPlan) {
+        List<Plan> plans = plansForDay.get(date);
+        for(Plan plan:plans){
+            if(!oldPlan.equals(plan) && start.isBefore(plan.getEndTime()) && plan.getStartTime().isBefore(end))
+                return false;
+        }
+        return true;
+    }
 
     public void deletePlanForDay(LocalDate date, Plan plan){
         if(plansForDay.containsKey(date)){
@@ -108,7 +116,7 @@ public class PlansRecyclerViewModel extends AndroidViewModel {
     }
 
     public boolean editPlanForDay(LocalDate date, Plan oldPlan, LocalDateTime start, LocalDateTime end, String title, String details, String priority){
-        if(!plansForDay.containsKey(date) || !checkTime(date,start,end)){
+        if(!plansForDay.containsKey(date) || !checkTime(date,start,end,oldPlan)){
             return false;
         }
         SharedPreferences sp = getApplication().getSharedPreferences(StaticValues.USER_SHARED_PREF,MODE_PRIVATE);

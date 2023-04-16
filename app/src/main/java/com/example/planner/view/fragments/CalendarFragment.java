@@ -46,11 +46,9 @@ public class CalendarFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
         planViewModel = new ViewModelProvider(requireActivity(), new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())).get(PlansRecyclerViewModel.class);
-        planViewModel.fetch();
         initRecycler();
         initObservers();
         initListeners();
-
     }
 
     private void initView(View view) {
@@ -58,24 +56,16 @@ public class CalendarFragment extends Fragment {
         month = view.findViewById(R.id.date);
     }
     private void initObservers() {
-        planViewModel.getPlansLiveData().observe(getViewLifecycleOwner(),new Observer<Map<LocalDate, List<Plan>>>() {
-            @Override
-            public void onChanged(Map<LocalDate, List<Plan>> newPlanMap) {
-                calendarAdapter.setPlanMap(newPlanMap); // Postavite novu mapu u adapter kada se ona promeni
-            }
+        planViewModel.getPlansLiveData().observe(getViewLifecycleOwner(), newPlanMap -> {
+            calendarAdapter.setPlanMap(newPlanMap); // Postavite novu mapu u adapter kada se ona promeni
         });
     }
     private void initRecycler() {
         calendarAdapter = new CalendarViewAdapter(planViewModel.getPlansLiveData().getValue(),new DateDiffer(),date->{
-
-            // ovde dobijam localdate za kliknutu stavku
-
             DailyPlanFragment dailyPlanFragment = new DailyPlanFragment(date);
             MainFragment mainFragment = (MainFragment) requireActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.MainFragmentTag);
             if (mainFragment != null) {
-                //Toast.makeText(requireContext(), date + "", Toast.LENGTH_SHORT).show();
                 mainFragment.goToFragment(dailyPlanFragment, PagerAdapter.FRAGMENT_2,date);
-
             }
         });
         recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(),7));

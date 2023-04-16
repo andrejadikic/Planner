@@ -33,7 +33,7 @@ public class ShowPlanFragment extends Fragment {
     private TextView description;
     private Button editBtn;
     private Button deleteBtn;
-    private LocalDate date;
+    private final LocalDate date;
     private Plan plan;
 
 
@@ -47,11 +47,10 @@ public class ShowPlanFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toast.makeText(requireContext(),"neee",Toast.LENGTH_SHORT);
+        Toast.makeText(requireContext(),"neee",Toast.LENGTH_SHORT).show();
+        planViewModel = new ViewModelProvider(requireActivity(), new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())).get(PlansRecyclerViewModel.class);
         initView(view);
         updateUi();
-        planViewModel = new ViewModelProvider(requireActivity(), new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())).get(PlansRecyclerViewModel.class);
-        planViewModel.fetch();
         initObservers();
         initListeners(view);
 

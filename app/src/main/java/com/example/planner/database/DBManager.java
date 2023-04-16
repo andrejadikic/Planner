@@ -98,7 +98,7 @@ public class DBManager {
         contentValues.put(PlanEntry.COLUMN_STARTDATE, startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         contentValues.put(PlanEntry.COLUMN_ENDDATE, endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         contentValues.put(PlanEntry.COLUMN_DETAILS, details);
-        int i = db.update(UserEntry.TABLE_NAME, contentValues, PlanEntry._ID + " = ? "  , new String[]{String.valueOf(id)});
+        int i = db.update(PlanEntry.TABLE_NAME, contentValues, PlanEntry._ID + " = ? "  , new String[]{String.valueOf(id)});
         return new Plan(id,userId,name,priority, startTime,endTime,details);
     }
 

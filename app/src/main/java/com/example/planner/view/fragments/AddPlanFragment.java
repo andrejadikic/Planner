@@ -62,8 +62,6 @@ public class AddPlanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         plansRecyclerViewModel = new ViewModelProvider(requireActivity(), new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())).get(PlansRecyclerViewModel.class);
-        SharedPreferences sp = context.getSharedPreferences(StaticValues.USER_SHARED_PREF,MODE_PRIVATE);
-        long id = sp.getLong(StaticValues.ID,0);
         init(view);
     }
 
@@ -87,29 +85,22 @@ public class AddPlanFragment extends Fragment {
 
     private void initActions(View view) {
         startTxt.setOnClickListener(v->{
-            TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                    hourStart=hour;
-                    minuteStart=minute;
-                    start = LocalDateTime.of(date, LocalTime.of(hour,minute));
-                    startTxt.setText(String.format(Locale.getDefault(),"%02d:%02d",hourStart,minuteStart));
-                }
+            TimePickerDialog.OnTimeSetListener onTimeSetListener = (timePicker, hour, minute) -> {
+                hourStart=hour;
+                minuteStart=minute;
+                start = LocalDateTime.of(date, LocalTime.of(hour,minute));
+                startTxt.setText(String.format(Locale.getDefault(),"%02d:%02d",hourStart,minuteStart));
             };
-
             TimePickerDialog timePickerDialog = new TimePickerDialog(this.context,onTimeSetListener,hourStart,minuteStart,true);
             timePickerDialog.setTitle("Select start time");
             timePickerDialog.show();
         });
         endTxt.setOnClickListener(v->{
-            TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                    hourStart=hour;
-                    minuteStart=minute;
-                    end = LocalDateTime.of(date, LocalTime.of(hour,minute));
-                    startTxt.setText(String.format(Locale.getDefault(),"%02d:%02d",hourStart,minuteStart));
-                }
+            TimePickerDialog.OnTimeSetListener onTimeSetListener = (timePicker, hour, minute) -> {
+                hourStart=hour;
+                minuteStart=minute;
+                end = LocalDateTime.of(date, LocalTime.of(hour,minute));
+                endTxt.setText(String.format(Locale.getDefault(),"%02d:%02d",hourStart,minuteStart));
             };
 
             TimePickerDialog timePickerDialog = new TimePickerDialog(this.context,onTimeSetListener,hourStart,minuteStart,true);
@@ -132,13 +123,10 @@ public class AddPlanFragment extends Fragment {
     }
 
     private void initListener(View view) {
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton checked = (RadioButton)view.findViewById(checkedId);
-                checked.setBackgroundResource(R.color.gray);
-                priority = checked.getText().toString().toLowerCase();
-            }
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton checked = (RadioButton)view.findViewById(checkedId);
+            checked.setBackgroundResource(R.color.gray);
+            priority = checked.getText().toString().toLowerCase();
         });
     }
 }
