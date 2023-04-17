@@ -2,7 +2,15 @@
     <string name="app_name" translatable="false">DejsiPlaner</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="passwordConf">Confirm Password</string>
     <string name="email" translatable="false" >Email</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
     <string name="login">Login</string>
     <string name="logout">Log out</string>
     <string name="calendar">Calendar</string>

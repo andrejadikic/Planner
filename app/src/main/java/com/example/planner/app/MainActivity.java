@@ -19,11 +19,7 @@ import com.example.planner.view.fragments.SecondFragment;
 import com.example.planner.viewmodels.SplashViewModel;
 
 public class MainActivity extends AppCompatActivity {
-
-    private final String SECOND_FRAGMENT_TAG = "secondFragment";
     public static final  String MainFragmentTag = "firstFragment";
-    private SplashViewModel splashViewModel;
-    private User user;
     private DBManager dbManager;
 
     @Override
@@ -32,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         dbManager = new DBManager(this);
         dbManager.open();
 
-        splashViewModel = new ViewModelProvider(this).get(SplashViewModel.class);
+        SplashViewModel splashViewModel = new ViewModelProvider(this).get(SplashViewModel.class);
         // Handle the splash screen transition.
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         splashScreen.setKeepOnScreenCondition(() -> {

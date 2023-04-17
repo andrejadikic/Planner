@@ -3,6 +3,14 @@
     <string name="app_name">DejsiPlaner</string>
     <string name="username">Korisničko ime</string>
     <string name="password">Lozinka</string>
+    <string name="passwordConf">Potvrdi lozinku</string>
+    <string name="monday">Pon</string>
+    <string name="tuesday">Uto</string>
+    <string name="wednesday">Sre</string>
+    <string name="thursday">Cet</string>
+    <string name="friday">Pet</string>
+    <string name="saturday">Sub</string>
+    <string name="sunday">Ned</string>
     <string name="login">Prijavi se</string>
     <string name="logout">Odjava</string>
     <string name="calendar">Kalendar</string>

@@ -22,8 +22,6 @@ import com.example.planner.app.StaticValues;
 import com.example.planner.database.DBManager;
 import com.example.planner.models.User;
 
-import java.util.Locale;
-
 public class ProfileFragment extends Fragment {
     private Context context;
     private SharedPreferences sp;
@@ -54,9 +52,7 @@ public class ProfileFragment extends Fragment {
         dbManager = new DBManager(getContext());
         dbManager.open();
         sp = context.getSharedPreferences(StaticValues.USER_SHARED_PREF, MODE_PRIVATE);
-        long id = sp.getLong(StaticValues.ID, -1);
         password = sp.getString(StaticValues.PASSWORD,"");
-        Toast.makeText(context, "Id" + id, Toast.LENGTH_SHORT).show();
         init(view);
     }
 
@@ -83,14 +79,12 @@ public class ProfileFragment extends Fragment {
         changePassBtn.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setTitle(R.string.change_password);
-
-
-// Set up the input
             final EditText input = new EditText(context);
+            input.setHint(R.string.password);
             final EditText inputConf = new EditText(context);
+            inputConf.setHint(R.string.passwordConf);
             final LinearLayout layout = new LinearLayout(context);
             layout.setOrientation(LinearLayout.VERTICAL);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             inputConf.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             layout.addView(input);
@@ -118,7 +112,6 @@ public class ProfileFragment extends Fragment {
                     dialog.cancel();
                 }
             });
-
             builder.show();
         });
 
